@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -44,5 +45,15 @@ class Product extends Model
     public function rental()
     {
         return $this->belongsToMany(Rental::class);
+    }
+
+
+
+    protected $fillable = ['serialnumber', 'buyed_at', 'type_id'];
+    protected $dates = ['buyed_at'];
+
+    public function setBuyed_atAttribute($attribute)
+    {
+        $this->attributes['buyed_at'] = Carbon::parse($attribute);
     }
 }

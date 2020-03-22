@@ -18,3 +18,5 @@ Route::post('/types', 'TypesController@store')->name('types.store');
 Route::patch('/types/{type}', 'TypesController@update')->name('types.update');
 Route::delete('/types/{type}', 'TypesController@destroy')->name('types.destroy');
 Route::get('types/{type}', 'TypesController@show')->name('types.show');
+
+Route::post('/products', 'ProductsController@store')->name('products.controller');

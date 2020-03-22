@@ -13,6 +13,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::post('/types', 'TypesController@store');
+Route::patch('types/{type}', 'TypesController@update');

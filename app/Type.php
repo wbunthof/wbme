@@ -10,4 +10,6 @@ class Type extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    protected $fillable = ['name', 'brand', 'specifications'];
 }

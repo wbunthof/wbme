@@ -17,7 +17,7 @@ class CreateTypeTable extends Migration
             $table->id();
             $table->text('name');
             $table->text('brand');
-            $table->json('specifications');
+            $table->json('specifications')->nullable();
             $table->timestamps();
         });
     }

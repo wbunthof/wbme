@@ -11,5 +11,10 @@ class Type extends Model
         return $this->hasMany(Product::class);
     }
 
+    public function path()
+    {
+        return route('types.show', $this->id);
+    }
+
     protected $fillable = ['name', 'brand', 'specifications'];
 }

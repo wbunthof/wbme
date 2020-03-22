@@ -13,5 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/types', 'TypesController@store');
-Route::patch('types/{type}', 'TypesController@update');
+Route::get('/types', 'TypesController@index')->name('types.index');
+Route::post('/types', 'TypesController@store')->name('types.store');
+Route::patch('/types/{type}', 'TypesController@update')->name('types.update');
+Route::delete('/types/{type}', 'TypesController@destroy')->name('types.destroy');
+Route::get('types/{type}', 'TypesController@show')->name('types.show');

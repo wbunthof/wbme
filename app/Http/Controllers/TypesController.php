@@ -9,12 +9,28 @@ class TypesController extends Controller
 {
     public function store()
     {
-        Type::create($this->validateRequest());
+        $type = Type::create($this->validateRequest());
+
+        return redirect($type->path());
+    }
+
+    public function show(Type $type)
+    {
+
     }
 
     public function update(Type $type)
     {
         $type->update($this->validateRequest());
+
+        return redirect($type->path());
+    }
+
+    public function destroy(Type $type)
+    {
+        $type->delete();
+
+        return redirect('types.index');
     }
 
     /**
@@ -25,7 +41,7 @@ class TypesController extends Controller
         return request()->validate([
             'name' => 'required',
             'brand' => 'required',
-            'specifications' => ''
+            'specifications' => 'json|nullable'
         ]);
     }
 }

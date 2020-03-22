@@ -6,22 +6,24 @@ use App\Type;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class TypeTest extends TestCase
+class TypeManagementTest extends TestCase
 {
     use RefreshDatabase;
     /** @test */
     public function a_product_can_be_added()
     {
         $this->withoutExceptionHandling();
-
         $response = $this->post('/types', [
             'name' => 'Compact par 7 tri',
             'brand' => 'Showtec',
             'specifications' => json_encode(['led' => '7 x 3w RGB'])
         ]);
 
-        $response->assertOk();
+        $type = Type::first();
+
         $this->assertCount(1, Type::all());
+
+        $response->assertRedirect(route('types.show', [ 'type' => $type->id]));
     }
 
     /** @test */
@@ -49,10 +51,19 @@ class TypeTest extends TestCase
     }
 
     /** @test */
+    public function specifications_must_be_json()
+    {
+        $response = $this->post('/types', [
+            'name' => 'Compact par 7 tri',
+            'brand' => 'Showtec',
+            'specifications' => 'String instead of json'
+        ]);
+        $response->assertSessionHasErrors('specifications');
+    }
+
+    /** @test */
     public function a_type_can_be_updated()
     {
-        $this->withoutExceptionHandling();
-
         $this->post('/types', [
             'name' => 'Compact par 7 tri',
             'brand' => 'Showtec',
@@ -63,13 +74,33 @@ class TypeTest extends TestCase
 
         $response = $this->patch('/types/' . $type->id, [
             'name' => 'New name',
+            'brand' => 'New brand',
+            'specifications' => json_encode(['Color' => 'RGB'])
+        ]);
+
+        $this->assertEquals('New name', Type::first()->name);
+        $this->assertEquals('New brand', Type::first()->brand);
+        $this->assertEquals(json_encode(['Color' => 'RGB']), Type::first()->specifications);
+
+        $response->assertRedirect(route('types.show', [ 'type' => $type->id]));
+    }
+
+    /** @test */
+    public function a_type_can_be_deleted()
+    {
+        $this->post('/types', [
+            'name' => 'Compact par 7 tri',
             'brand' => 'Showtec',
             'specifications' => json_encode(['led' => '7 x 3w RGB'])
         ]);
 
-        $this->assertEquals('New name', Type::first()->name);
+        $type = Type::first();
+        $this->assertCount(1, Type::all());
+
+        $response = $this->delete('/types/' . $type->id);
+
+        $this->assertCount(0, Type::all());
+
+        $response->assertRedirect('types.index');
     }
-
-
-
 }

@@ -35,7 +35,7 @@ class Type extends Model
 
     public function path()
     {
-        return route('types.show', $this->id);
+        return route('types.show', ['type' => $this->id]);
     }
 
     protected $fillable = ['name', 'brand', 'specifications'];

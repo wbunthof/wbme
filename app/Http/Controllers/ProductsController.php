@@ -9,6 +9,39 @@ class ProductsController extends Controller
 {
     public function store()
     {
-        Product::create(request()->all());
+        $product = Product::create($this->validateRequest());
+
+        return redirect(route('products.show', ['product' => $product->id]));
+    }
+
+    public function update(Product $product)
+    {
+        $product->update($this->validateRequest());
+
+        return redirect(route('products.show', ['product' => $product->id]));
+    }
+
+    public function show(Product $product)
+    {
+        dd($product);
+    }
+
+    public function destroy(Product $product)
+    {
+        $product->delete();
+
+        return redirect(route('products.index'));
+    }
+
+    /**
+     * @return array
+     */
+    protected function validateRequest(): array
+    {
+        return request()->validate([
+            'serialnumber' => 'required',
+            'buyed_at' => 'required|date',
+            'type_id' => ''
+        ]);
     }
 }

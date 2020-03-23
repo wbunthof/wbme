@@ -10,14 +10,9 @@ class TypeManagementTest extends TestCase
 {
     use RefreshDatabase;
     /** @test */
-    public function a_product_can_be_added()
+    public function a_type_can_be_created()
     {
-        $this->withoutExceptionHandling();
-        $response = $this->post('/types', [
-            'name' => 'Compact par 7 tri',
-            'brand' => 'Showtec',
-            'specifications' => json_encode(['led' => '7 x 3w RGB'])
-        ]);
+        $response = $this->post('/types', $this->data());
 
         $type = Type::first();
 
@@ -29,46 +24,26 @@ class TypeManagementTest extends TestCase
     /** @test */
     public function a_name_is_required()
     {
-        $response = $this->post('/types', [
+        $response = $this->post('/types', array_merge($this->data(), [
             'name' => '',
-            'brand' => 'Showtec',
-            'specifications' => json_encode(['led' => '7 x 3w RGB'])
-        ]);
+        ]));
 
         $response->assertSessionHasErrors('name');
     }
 
-    /** @test */
-    public function a_brand_is_required()
-    {
-        $response = $this->post('/types', [
-            'name' => 'Compact par 7 tri',
-            'brand' => '',
-            'specifications' => json_encode(['led' => '7 x 3w RGB'])
-        ]);
-
-        $response->assertSessionHasErrors('brand');
-    }
-
-    /** @test */
+      /** @test */
     public function specifications_must_be_json()
     {
-        $response = $this->post('/types', [
-            'name' => 'Compact par 7 tri',
-            'brand' => 'Showtec',
+        $response = $this->post('/types', array_merge($this->data(), [
             'specifications' => 'String instead of json'
-        ]);
+        ]));
         $response->assertSessionHasErrors('specifications');
     }
 
     /** @test */
     public function a_type_can_be_updated()
     {
-        $this->post('/types', [
-            'name' => 'Compact par 7 tri',
-            'brand' => 'Showtec',
-            'specifications' => json_encode(['led' => '7 x 3w RGB'])
-        ]);
+        $this->post('/types', $this->data());
 
         $type = Type::first();
 
@@ -88,11 +63,7 @@ class TypeManagementTest extends TestCase
     /** @test */
     public function a_type_can_be_deleted()
     {
-        $this->post('/types', [
-            'name' => 'Compact par 7 tri',
-            'brand' => 'Showtec',
-            'specifications' => json_encode(['led' => '7 x 3w RGB'])
-        ]);
+        $this->post('/types', $this->data());
 
         $type = Type::first();
         $this->assertCount(1, Type::all());
@@ -102,5 +73,17 @@ class TypeManagementTest extends TestCase
         $this->assertCount(0, Type::all());
 
         $response->assertRedirect('types.index');
+    }
+
+    /**
+     * @return array
+     */
+    public function data(): array
+    {
+        return [
+            'name' => 'Compact par 7 tri',
+            'brand' => 'Showtec',
+            'specifications' => json_encode(['led' => '7 x 3w RGB'])
+        ];
     }
 }

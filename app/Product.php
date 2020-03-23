@@ -47,7 +47,26 @@ class Product extends Model
         return $this->belongsToMany(Rental::class);
     }
 
+    public function path()
+    {
+         return route('products.show', ['product' => $this->id]);
+    }
 
+    public function setTypeIdAttribute($type)
+    {
+        if (is_numeric($type) && Type::find($type))
+        {
+            $id = Type::find($type)->id;
+        }
+        if (!isset($id))
+        {
+            $id = (Type::firstOrCreate([
+                'name' => $type,
+            ]))->id;
+        }
+
+        $this->attributes['type_id'] = $id;
+    }
 
     protected $fillable = ['serialnumber', 'buyed_at', 'type_id'];
     protected $dates = ['buyed_at'];

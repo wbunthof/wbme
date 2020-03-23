@@ -13,10 +13,10 @@
         "fruitcake/laravel-cors": "^1.0",
         "guzzlehttp/guzzle": "^6.3",
         "laravel/framework": "^7",
-        "laravel/tinker": "^2.0"
+        "laravel/tinker": "^2.0",
+        "ext-json": "*"
     },
     "require-dev": {
-        "ext-json": "*",
         "barryvdh/laravel-ide-helper": "^2.6",
         "facade/ignition": "^2.0",
         "fzaninotto/faker": "^1.9.1",

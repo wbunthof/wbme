@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
+use Str;
 
 /**
  * App\Type
@@ -25,9 +27,14 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Type whereSpecifications($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Type whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string $slug
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Type whereSlug($value)
  */
 class Type extends Model
 {
+
+    use Searchable;
+
     public function product()
     {
         return $this->hasMany(Product::class);
@@ -38,5 +45,30 @@ class Type extends Model
         return route('types.show', ['type' => $this->id]);
     }
 
-    protected $fillable = ['name', 'brand', 'specifications'];
+    public function setNameAttribute($name)
+    {
+        $this->attributes['name'] = $name;
+        $this->attributes['slug'] = Str::slug($name);
+    }
+
+    protected $casts = [
+        'specifications' => 'array'
+    ];
+
+    protected $fillable = ['name', 'slug','brand', 'specifications'];
+    protected $relations = [Product::class];
+
+    public function toSearchableArray()
+    {
+        $array = $this->toArray();
+
+        foreach ($this->relations as $relation) {
+            if($relation = substr( strrchr( $relation, '\\' ), 1 ))
+            {
+                $array = array_merge($array, [$relation => $this->$relation()->get()->toArray()]);
+            }
+        }
+
+        return $array;
+    }
 }

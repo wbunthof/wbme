@@ -22,6 +22,18 @@ class TypeManagementTest extends TestCase
     }
 
     /** @test */
+    public function a_type_has_a_slug()
+    {
+        $response = $this->post('/types', $this->data());
+
+        $type = Type::first();
+
+        $this->assertCount(1, Type::all());
+        $this->assertEquals(str_replace(' ', '-', strtolower($this->data()['name'])), $type->slug);
+        $response->assertRedirect(route('types.show', [ 'type' => $type->id]));
+    }
+
+    /** @test */
     public function a_name_is_required()
     {
         $response = $this->post('/types', array_merge($this->data(), [

@@ -13,7 +13,7 @@ class CreateRentalProductPivotTable extends Migration
      */
     public function up()
     {
-        Schema::create('rental_product_pivot', function (Blueprint $table) {
+        Schema::create('product_rental', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('rental_id');
             $table->unsignedInteger('product_id');
@@ -28,6 +28,6 @@ class CreateRentalProductPivotTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rental_product_pivot');
+        Schema::dropIfExists('product_rental');
     }
 }

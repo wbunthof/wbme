@@ -21,11 +21,6 @@ class ProductsController extends Controller
         return redirect(route('products.show', ['product' => $product->id]));
     }
 
-    public function show(Product $product)
-    {
-        dd($product);
-    }
-
     public function destroy(Product $product)
     {
         $product->delete();

@@ -4,6 +4,7 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 /**
  * App\Product
@@ -32,6 +33,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Product extends Model
 {
+    use Searchable;
+
     public function type()
     {
         return $this->belongsTo(Type::class);
@@ -67,12 +70,36 @@ class Product extends Model
 
         $this->attributes['type_id'] = $id;
     }
+//
+//    public function search($search)
+//    {
+//        return
+//            self::whereHas('type', function ($query) use ($search) {
+//                $query->where('name', 'LIKE', '%' . $search . '%');
+//            })
+//                   ->orWhere('serialnumber', 'LIKE', '%' . $search. '%');
+//    }
 
     protected $fillable = ['serialnumber', 'buyed_at', 'type_id'];
     protected $dates = ['buyed_at'];
+    protected $relations = [Type::class, Repair::class, Rental::class];
 
     public function setBuyed_atAttribute($attribute)
     {
         $this->attributes['buyed_at'] = Carbon::parse($attribute);
+    }
+
+    public function toSearchableArray()
+    {
+        $array = $this->toArray();
+
+        foreach ($this->relations as $relation) {
+            if($relation = substr( strrchr( $relation, '\\' ), 1 ))
+            {
+                $array = array_merge($array, [$relation => $this->$relation()->get()->toArray()]);
+            }
+        }
+
+        return $array;
     }
 }

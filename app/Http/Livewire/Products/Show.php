@@ -11,7 +11,6 @@ class Show extends Component
     public $product;
     public $edit = -1;
     public $editValue;
-    public $test;
 
     public function mount(Product $product)
     {
@@ -30,8 +29,8 @@ class Show extends Component
     }
 
     public function specOpslaan($spec, $value)
-{
-    dd(Arr::set($this->product->type->specifications, $spec, $this->editValue));
+    {
+        dd(Arr::set($this->product->type->specifications, $spec, $this->editValue));
 
         $this->product->type->save();
         $this->test = $this->product->type;

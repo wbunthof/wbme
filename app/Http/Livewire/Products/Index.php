@@ -51,7 +51,7 @@ class Index extends Component
 
     public function updatedType($value)
     {
-        $this->types = $this->type ? Type::where('slug', 'LIKE', '%' . $value . '%')->get()->toArray() : [];
+        $this->types = $this->type ? Type::search($value)->get()->toArray() : [];
     }
 
     public function productSearching()

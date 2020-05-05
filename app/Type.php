@@ -35,7 +35,7 @@ class Type extends Model
 
     use Searchable;
 
-    public function product()
+    public function products()
     {
         return $this->hasMany(Product::class);
     }
